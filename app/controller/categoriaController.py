@@ -4,12 +4,13 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
-
+import openai
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain, SequentialChain
 import mysql.connector
 import logging
 import json
+from langchain.prompts import PromptTemplate
 logging.basicConfig(level=logging.INFO)
 
 #TODO Separar o agente do controller
@@ -143,3 +144,30 @@ class categoriaController:
         rows = cursor.fetchall()
         cursor.close()
         return rows
+    
+    def executar_consulta_sql(self,query):
+            try:
+                cursor = self.db_connection.cursor(dictionary=True)
+                cursor.execute(query)
+                resultados = cursor.fetchall()
+                colunas = cursor.column_names
+                cursor.close()
+                return resultados, colunas
+            except mysql.connector.Error as err:
+                return f"Erro: {err}", []
+            
+    def relatorioCategoriaAgent(self,mensagem_usuario):
+            #TODO Em algum momentos ele cria o sql correto mas com formato errado implementar validação do sql criado
+            prompt_template = PromptTemplate.from_template("""
+            Utilize a tabela `categorias` do banco de dados que contém as colunas `id`, `produto`, `categoria_pricipal`, `categoria_secundaria`, `categoria_terciaria`,
+            `ncn`,`categoria_terciaria`,e `data_cadastro`.
+            gere sempre um unico sql 
+            Gere uma consulta SQL com base na seguinte solicitação do usuário:
+            {mensagem_usuario}
+            """)
+            #TODO Ajustar a chamada do token openai
+            openai.api_key = 'sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq' 
+            llm = OpenAI(api_key=openai.api_key)
+            chain = LLMChain(llm=llm, prompt=prompt_template)
+            consulta_sql = chain.run(mensagem_usuario)
+            return consulta_sql
