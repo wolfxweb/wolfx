@@ -3,7 +3,7 @@ from view.page_home import page_home
 from view.page_chat import page_chat
 from view.page_categoria import page_categoria
 
-
+#TODO Reavaliar para deixar generico para poder usar o chatgpt ou gemini
 # Função para exibir a página de perfil
 def page_profile():
     st.title("Perfil do Usuário")

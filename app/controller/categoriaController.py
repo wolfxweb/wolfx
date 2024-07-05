@@ -11,8 +11,11 @@ import mysql.connector
 import logging
 import json
 logging.basicConfig(level=logging.INFO)
+
+#TODO Separar o agente do controller
 class CategoriaTemplate:
     def __init__(self):
+        #TODO Não vai ter o CANE rever o promt
         self.system_template = """
             Você é especialista em categorização de produtos, sua função é examinar cuidadosamente cada item e definir três níveis de categorias com precisão. 
             Durante o desempenho das suas atividades, analise detalhadamente as características e o contexto de cada produto para determinar os níveis de categorias mais apropriados.
@@ -80,6 +83,7 @@ class AgentCategoria:
             return_only_outputs=True
         )
 
+        #TODO Ajsutar o template da categoria para retornar json  e depois remova esta parte que criar o json
         response_data = response["agent_categoria_response"].strip().replace("\n", " ")
 
         categorias = response_data.split(" - ")
@@ -109,12 +113,15 @@ class categoriaController:
         )
 
     def categoriaAgent(self, text):
+        #TODO Pegar o tocken do .env
         agent = AgentCategoria(open_ai_api_key="sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq")
         response = agent.getCategoria(text)
         self.save_categoria(response,text)
         return response
 
     def save_categoria(self, data,text):
+        #TODO Ajsuta para não adiconar caso não encontre uma categoria
+        #TODO Analisar o cadastramento de itens duplicado, 
         cursor = self.db_connection.cursor()
         sql = """INSERT INTO categorias (categoria_principal, categoria_secundaria, categoria_terciaria, ncm, produto)
                    VALUES (%s, %s, %s, %s,%s)"""
