@@ -1,0 +1,28 @@
+# Use a imagem oficial do Python para FastAPI
+FROM python:3.9-slim
+
+# Configuração do diretório de trabalho no container
+WORKDIR /app
+
+
+# Copiar arquivos necessários
+COPY ./requirements.txt .
+COPY ./app /app
+COPY .env .
+
+# Instala dependências do sistema operacional
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     libssl-dev \
+#     libffi-dev \
+#     libpq-dev \
+#     && rm -rf /var/lib/apt/lists/*
+    
+# Instalar dependências Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expor a porta 8000 para o FastAPI
+EXPOSE 8000
+
+# Comando para iniciar o FastAPI
+CMD ["uvicorn", "main_api:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,5 @@
+# When prompted for a password, use an access token with write permissions.
+# Generate one from your settings: https://huggingface.co/settings/tokens
+git clone https://huggingface.co/spaces/celobo/wolfx-meta-llama-Meta-Llama-3-70B
+
+find ./app -name __init__.py -delete

@@ -1,0 +1,21 @@
+# Use a imagem oficial do MySQL
+FROM mysql:8.0
+
+# Defina a senha do root e crie o banco de dados ao iniciar o contêiner
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=wolfx_bd
+# Criar diretório para dados
+RUN mkdir /var/lib/mysql
+
+# Copiar arquivos de configuração
+COPY my.cnf /etc/mysql/my.cnf
+
+# Copie o script de inicialização SQL para o diretório de inicialização do MySQL
+COPY init.sql /docker-entrypoint-initdb.d/
+# Copiar arquivos de configuração
+#COPY my.cnf /etc/mysql/my.cnf
+# Expor a porta padrão do MySQL
+EXPOSE 3306
+
+# Comando para iniciar o MySQL
+CMD ["mysqld"]

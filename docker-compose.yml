@@ -1,0 +1,60 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      PYTHONPATH: /app
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wolfx_bd
+    volumes:
+      - mysql_data:/var/lib/mysql  
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1
+    ports:
+      - "8080:80"
+    environment:
+      PYTHONPATH: /app
+      PMA_ARBITRARY: 1
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: wolfx_bd
+     
+    depends_on:
+      - mysql
+
+  fastapi:
+     build:
+       context: .
+       dockerfile: Dockerfile.fastapi
+     ports:
+       - "8000:8000"
+     depends_on:
+       - mysql
+     environment:
+       PYTHONPATH: /app
+       MYSQL_HOST: mysql
+       MYSQL_USER: root
+       MYSQL_PASSWORD: root
+       MYSQL_DATABASE: wolfx_bd
+
+     env_file:
+       - .env
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      PYTHONPATH: /app
+    depends_on:
+      - fastapi
+
+volumes:
+  mysql_data:
