@@ -23,7 +23,7 @@ def main():
 
 
     if menu == "Página Inicial":
-        page_home()
+          page_categoria()
     elif menu == "Chat":
         page_chat()
     elif menu == "Categorizacao de produtos":

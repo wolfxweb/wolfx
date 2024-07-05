@@ -60,7 +60,7 @@ def page_categoria():
             df = pd.DataFrame(categorias)
             df = df.drop(columns=df.columns[0])
             df.columns = [
-                "Nome do item",
+                "Produto",
                 "Categoria nível 1",
                 "Categoria nível 2",
                 "Categoria nível 3",
@@ -73,68 +73,32 @@ def page_categoria():
             
             
     elif opcao =="Chat":
-            
-        load_dotenv()
+     
 
-        # Configure a API key da OpenAI
-        # openai.api_key = 'sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq'
 
-       # Configuração da conexão com o banco de dados MySQL
-        # db_config = {
-        #     'user': 'root',
-        #     'password': 'root',
-        #     'host':  'mys ql',
-        #     'database': 'wolfx_db'
-        # }
-
-        # def executar_consulta_sql(query):
-        #     try:
-        #         conn = mysql.connector.connect(**db_config)
-        #         cursor = conn.cursor()
-        #         cursor.execute(query)
-        #         resultados = cursor.fetchall()
-        #         colunas = cursor.column_names
-        #         conn.close()
-        #         return resultados, colunas
-        #     except mysql.connector.Error as err:
-        #         return f"Erro: {err}", []
 
         st.subheader("Chat - Relatórios com linguagem natural")
 
         if 'historico' not in st.session_state:
             st.session_state.historico = []
 
-        # def solicitar_relatorio(mensagem_usuario):
-        #     #TODO Em algum momentos ele cria o sql correto mas com formato errado implementar validação do sql criado
-        #     prompt_template = PromptTemplate.from_template("""
-        #     Utilize a tabela `categorias` do banco de dados que contém as colunas `id`, `produto`, `categoria_pricipal`, `categoria_secundaria`, `categoria_terciaria`,
-        #     `ncn`,`categoria_terciaria`,e `data_cadastro`.
-        #     gere sempre um unico sql 
-        #     Gere uma consulta SQL com base na seguinte solicitação do usuário:
-        #     {mensagem_usuario}
-        #     """)
-            
-        #     llm = OpenAI(api_key=openai.api_key)
-        #     chain = LLMChain(llm=llm, prompt=prompt_template)
-        #     consulta_sql = chain.run(mensagem_usuario)
-        #     return consulta_sql
-
         mensagem_usuario = st.text_input("Você:", key="mensagem_usuario")
 
         if st.button("Enviar"):
             if mensagem_usuario:
-                st.session_state.historico.append(f"Você: {mensagem_usuario}")
-
+                #st.session_state.historico.append(f"Você: {mensagem_usuario}")
+                st.write(f"Usuário : {mensagem_usuario} ") 
                 consulta_sql = clCategoria.relatorioCategoriaAgent(mensagem_usuario)
-                st.session_state.historico.append(f"Consulta SQL gerada: {consulta_sql}")
-
+                # st.session_state.historico.append(f"Consulta SQL gerada: {consulta_sql}")
+                st.write(f"Consulta SQL gerada : {consulta_sql} ")
                 resultados, colunas = clCategoria.executar_consulta_sql(consulta_sql)
                 if colunas:
                     #TODO Quando realizado varias consultas o historico acaba adicionado sql que não deveria, ver como contronar isso
                     # st.session_state.historico.append(f"Resultados da consulta: {resultados}")
                     st.write("Resultados da consulta:")
                     st.write(pd.DataFrame(resultados, columns=colunas))
-                # else:
+                else:
+                    st.write("Nenhum registro encontrado")
                     # st.session_state.historico.append(resultados)
 
         for mensagem in st.session_state.historico:

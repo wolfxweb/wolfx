@@ -124,7 +124,7 @@ class categoriaController:
         #TODO Ajsuta para não adiconar caso não encontre uma categoria
         #TODO Analisar o cadastramento de itens duplicado, 
         cursor = self.db_connection.cursor()
-        sql = """INSERT INTO categorias (categoria_principal, categoria_secundaria, categoria_terciaria, ncm, produto)
+        sql = """INSERT INTO categorias (categoria_1, categoria_2, categoria_3, ncm, produto)
                    VALUES (%s, %s, %s, %s,%s)"""
         values = (
             data.get("categoria_principal"),
@@ -157,15 +157,20 @@ class categoriaController:
                 return f"Erro: {err}", []
             
     def relatorioCategoriaAgent(self,mensagem_usuario):
-            #TODO Em algum momentos ele cria o sql correto mas com formato errado implementar validação do sql criado
+            #TODO Em algum momentos ele cria o sql correto mas com formato errado implementar validação do sql criado       
+            #TODO Como tratar consultas de colunas que não são encontradas
+            #TODO Refatorar a classe template da categoria para poder ter mais de um template           
             prompt_template = PromptTemplate.from_template("""
-            Utilize a tabela `categorias` do banco de dados que contém as colunas `id`, `produto`, `categoria_pricipal`, `categoria_secundaria`, `categoria_terciaria`,
+            Utilize a tabela `categorias` do banco de dados que contém as colunas `id`, `produto`, `categoria_1`, `categoria_2`, `categoria_3`,
             `ncn`,`categoria_terciaria`,e `data_cadastro`.
-            gere sempre um unico sql 
+            gere sempre um unico sql,
+            
             Gere uma consulta SQL com base na seguinte solicitação do usuário:
+            
             {mensagem_usuario}
             """)
-            #TODO Ajustar a chamada do token openai
+        
+            #TODO Refatorar para classe agente da categoria
             openai.api_key = 'sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq' 
             llm = OpenAI(api_key=openai.api_key)
             chain = LLMChain(llm=llm, prompt=prompt_template)
