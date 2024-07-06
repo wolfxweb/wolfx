@@ -31,5 +31,6 @@ def main():
     elif menu == "Configurações":
         page_settings()
 
+
 if __name__ == "__main__":
     main()

@@ -20,3 +20,4 @@ pymysql
 cryptography
 starlette
 PyPDF2
+streamlit-extras
