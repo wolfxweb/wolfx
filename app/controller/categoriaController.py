@@ -114,7 +114,7 @@ class categoriaController:
 
     def categoriaAgent(self, text):
         #TODO Pegar o tocken do .env
-        agent = AgentCategoria(open_ai_api_key="sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq")
+        agent = AgentCategoria(open_ai_api_key="sk-proj-pzakVTIjC7fBYj9xN01BT3BlbkFJCw37WJJrqiqnYmL3hbOW")
         response = agent.getCategoria(text)
         self.save_categoria(response,text)
         return response
@@ -170,7 +170,7 @@ class categoriaController:
             """)
         
             #TODO Refatorar para classe agente da categoria
-            openai.api_key = 'sk-proj-D8EMezj2OAP7g6TwPUbcT3BlbkFJ9278Lgz7j7NKKzlruZDq' 
+            openai.api_key = 'sk-proj-pzakVTIjC7fBYj9xN01BT3BlbkFJCw37WJJrqiqnYmL3hbOW' 
             llm = OpenAI(api_key=openai.api_key)
             chain = LLMChain(llm=llm, prompt=prompt_template)
             consulta_sql = chain.run(mensagem_usuario)
