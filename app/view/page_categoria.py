@@ -27,10 +27,11 @@ def upload_file():
             st.json(response)
 
 def predictCategoria():
+    token = st.text_input("Digite o seu codigo da API do chatgpt")
     titleProduct = st.text_input("Digite o Nome do item")
     if st.button("Salvar"):
         # TODO Adicionar validação para não enviar valor nulo
-        response = clCategoria.categoriaAgent(titleProduct)
+        response = clCategoria.categoriaAgent(titleProduct,token)
         titleProduct = ""
         st.write(f"Nome do item: {titleProduct}")
         st.write(f"Categoria Predita:")

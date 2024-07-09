@@ -112,9 +112,9 @@ class categoriaController:
             database="wolfx_bd"
         )
 
-    def categoriaAgent(self, text):
+    def categoriaAgent(self, text,token):
         #TODO Pegar o tocken do .env
-        agent = AgentCategoria(open_ai_api_key="sk-proj-pzakVTIjC7fBYj9xN01BT3BlbkFJCw37WJJrqiqnYmL3hbOW")
+        agent = AgentCategoria(open_ai_api_key=token)
         response = agent.getCategoria(text)
         self.save_categoria(response,text)
         return response
@@ -155,7 +155,7 @@ class categoriaController:
             except mysql.connector.Error as err:
                 return f"Erro: {err}", []
             
-    def relatorioCategoriaAgent(self,mensagem_usuario):
+    def relatorioCategoriaAgent(self,mensagem_usuario,token):
             #TODO Em algum momentos ele cria o sql correto mas com formato errado implementar validação do sql criado       
             #TODO Como tratar consultas de colunas que não são encontradas
             #TODO Refatorar a classe template da categoria para poder ter mais de um template           
@@ -170,7 +170,7 @@ class categoriaController:
             """)
         
             #TODO Refatorar para classe agente da categoria
-            openai.api_key = 'sk-proj-pzakVTIjC7fBYj9xN01BT3BlbkFJCw37WJJrqiqnYmL3hbOW' 
+            openai.api_key = token 
             llm = OpenAI(api_key=openai.api_key)
             chain = LLMChain(llm=llm, prompt=prompt_template)
             consulta_sql = chain.run(mensagem_usuario)
