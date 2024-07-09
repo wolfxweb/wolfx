@@ -17,11 +17,12 @@ clCategoria = categoriaController()
 
 
 def upload_file():
+    token = st.text_input("Digite o seu codigo da API do chatgpt")
     uploaded_file = st.file_uploader("Faça o upload de um arquivo CSV", type="csv")
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         for index, row in df.iterrows():
-            response = clCategoria.categoriaAgent(row["produto"])
+            response = clCategoria.categoriaAgent(row["produto"],token)
             st.write(f"Nome do item da linha {index}: {row['produto']}")
             st.write(f"Categoria Predita:")
             st.json(response)
@@ -39,7 +40,7 @@ def predictCategoria():
 
 def char():
     st.subheader("Chat - Relatórios com linguagem natural")
-
+    token = st.text_input("Digite o seu codigo da API do chatgpt")
     if 'historico' not in st.session_state:
         st.session_state.historico = []
 
@@ -49,7 +50,7 @@ def char():
         if mensagem_usuario:
             # st.session_state.historico.append(f"Você: {mensagem_usuario}")
             st.write(f"Usuário : {mensagem_usuario} ")
-            consulta_sql = clCategoria.relatorioCategoriaAgent(mensagem_usuario)
+            consulta_sql = clCategoria.relatorioCategoriaAgent(mensagem_usuario,token)
             # st.session_state.historico.append(f"Consulta SQL gerada: {consulta_sql}")
             st.write(f"Consulta SQL gerada : {consulta_sql} ")
             resultados, colunas = clCategoria.executar_consulta_sql(consulta_sql)
