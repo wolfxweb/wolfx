@@ -55,7 +55,7 @@ class AgentCategoria:
         if verbose:
             self.logger.setLevel(logging.INFO)
 
-        self._openai_key = "sk-proj-zXk4IlsQoZiGmFgeC5ubT3BlbkFJ6sjtqMwNSp27JU53NglP"
+        self._openai_key = open_ai_api_key
         self.chat_model = ChatOpenAI(model=model,
                                      temperature=temperature,
                                      openai_api_key=self._openai_key)
@@ -114,7 +114,7 @@ class categoriaController:
 
     def categoriaAgent(self, text,token):
         #TODO Pegar o tocken do .env
-        agent = AgentCategoria(open_ai_api_key='sk-proj-zXk4IlsQoZiGmFgeC5ubT3BlbkFJ6sjtqMwNSp27JU53NglP')
+        agent = AgentCategoria(open_ai_api_key=token)
         response = agent.getCategoria(text)
         self.save_categoria(response,text)
         return response
@@ -170,7 +170,7 @@ class categoriaController:
             """)
         
             #TODO Refatorar para classe agente da categoria
-            openai.api_key = "sk-proj-zXk4IlsQoZiGmFgeC5ubT3BlbkFJ6sjtqMwNSp27JU53NglP" 
+            openai.api_key = token 
             llm = OpenAI(api_key=openai.api_key)
             chain = LLMChain(llm=llm, prompt=prompt_template)
             consulta_sql = chain.run(mensagem_usuario)
