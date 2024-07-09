@@ -17,8 +17,8 @@ clCategoria = categoriaController()
 
 
 def upload_file():
-    token = st.text_input("Digite o seu codigo da API do chatgpt")
-    uploaded_file = st.file_uploader("Faça o upload de um arquivo CSV", type="csv")
+    token = st.text_input("Digite o seu codigo da API do chatgpt", key="token_input_2")
+    uploaded_file = st.file_uploader("Faça o upload de um arquivo CSV", type="csv", key="text_csv")
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         for index, row in df.iterrows():
@@ -28,8 +28,8 @@ def upload_file():
             st.json(response)
 
 def predictCategoria():
-    token = st.text_input("Digite o seu codigo da API do chatgpt")
-    titleProduct = st.text_input("Digite o Nome do item")
+    token = st.text_input("Digite o seu codigo da API do chatgpt", key="token_input_1")
+    titleProduct = st.text_input("Digite o Nome do item", key="title_input_1")
     if st.button("Salvar"):
         # TODO Adicionar validação para não enviar valor nulo
         response = clCategoria.categoriaAgent(titleProduct,token)
@@ -40,7 +40,7 @@ def predictCategoria():
 
 def char():
     st.subheader("Chat - Relatórios com linguagem natural")
-    token = st.text_input("Digite o seu codigo da API do chatgpt")
+    token = st.text_input("Digite o seu codigo da API do chatgpt",key="token_input_3")
     if 'historico' not in st.session_state:
         st.session_state.historico = []
 
@@ -68,6 +68,7 @@ def char():
 
 
 def listaCategorias():
+    
     categorias = clCategoria.get_all_categories()
     if categorias is None or not categorias:
         st.warning("Nenhuma categoria encontrada")
